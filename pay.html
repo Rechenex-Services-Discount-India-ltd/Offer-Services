@@ -9,11 +9,11 @@
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <style>
-        body { margin: 0; padding: 0; background-color: #f0f4f8; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif; }
-        #loader { background: white; padding: 40px; border-radius: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; width: 85%; max-width: 320px; position: relative; }
+        body { margin: 0; padding: 0; background-color: transparent; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif; }
+        #loader { display: none; background: white; padding: 40px; border-radius: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; width: 85%; max-width: 320px; position: relative; }
         .brand-name { color: #5f259f; font-weight: 700; font-size: 24px; margin-bottom: 10px; }
         .status-text { color: #64748b; font-size: 14px; }
-        #debug-info { position: fixed; bottom: 10px; font-size: 10px; color: #94a3b8; width: 100%; text-align: center; }
+        #debug-info { display: none; position: fixed; bottom: 10px; font-size: 10px; color: #94a3b8; width: 100%; text-align: center; }
     </style>
 </head>
 <body>
