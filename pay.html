@@ -21,6 +21,7 @@
         <div class="brand-name">Offer Services</div>
         <div class="status-text" id="msg">Initializing Secure Gateway...</div>
     </div>
+
     <div id="debug-info">Status: Waiting for Firebase...</div>
 
     <script>
@@ -40,6 +41,7 @@
         let liveRazorpayKey = "rzp_live_Skk21ExrcBTgDs";
         let isKeyLoaded = false;
 
+        // Listen for Key
         database.ref('config/razorpay_key').on('value', (snapshot) => {
             if (snapshot.exists()) {
                 liveRazorpayKey = snapshot.val();
@@ -53,6 +55,7 @@
 
         function initiatePayment(options) {
             if (!options.key) options.key = liveRazorpayKey;
+            
             options.handler = function(response) {
                 if (window.parent !== window) {
                     window.parent.postMessage({ status: 'success', response: response }, '*');
@@ -60,7 +63,13 @@
                     document.body.innerHTML = "<div style='text-align:center;padding:50px;'><h1>✅ Payment Success!</h1></div>";
                 }
             };
-            options.modal = { ondismiss: function() { if (window.parent !== window) window.parent.postMessage({ status: 'cancelled' }, '*'); } };
+            
+            options.modal = {
+                ondismiss: function() {
+                    if (window.parent !== window) window.parent.postMessage({ status: 'cancelled' }, '*');
+                }
+            };
+
             const rzp = new Razorpay(options);
             rzp.open();
             document.getElementById('loader').style.display = 'none';
@@ -83,8 +92,11 @@
         }
 
         window.addEventListener('message', function(event) {
-            if (event.data && event.data.action === 'initiate_payment') { initiatePayment(event.data.options); }
+            if (event.data && event.data.action === 'initiate_payment') {
+                initiatePayment(event.data.options);
+            }
         });
+        
         window.parent.postMessage({ status: 'ready' }, '*');
     </script>
 </body>
