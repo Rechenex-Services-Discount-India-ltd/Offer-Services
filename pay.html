@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Secure Payment</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style>
+        body { margin: 0; padding: 0; background-color: transparent; }
+    </style>
+</head>
+<body>
+<script>
+    window.addEventListener("message", function(event) {
+        const data = event.data;
+        if (data && data.action === 'PAY') {
+            const options = {
+                "key": data.razorpayKeyId,
+                "amount": data.amount,
+                "currency": "INR",
+                "name": "Recharge Pe",
+                "description": "Plan " + (data.amount / 100),
+                "handler": function (response) {
+                    window.parent.postMessage({
+                        status: 'success',
+                        razorpay_payment_id: response.razorpay_payment_id
+                    }, "*");
+                },
+                "modal": {
+                    "ondismiss": function() {
+                        window.parent.postMessage({ status: 'cancelled' }, "*");
+                    }
+                },
+                "prefill": {
+                    "contact": data.phone,
+                    "email": "customer@rechargepe.com"
+                },
+                "theme": { "color": "#7c3aed" }
+            };
+            const rzp = new Razorpay(options);
+            rzp.on('payment.failed', function (response){
+                window.parent.postMessage({
+                    status: 'failed',
+                    error: response.error
+                }, "*");
+            });
+            rzp.open();
+        }
+    });
+</script>
+</body>
+</html>
